@@ -1,7 +1,9 @@
 /**
  * LS-8 v2.0 emulator skeleton code
  */
-
+const LDI = 0b10011001
+const PRN = 0b01000011
+const HLT = 0b00000001
 /**
  * Class for simulating a simple Computer (CPU & memory)
  */
@@ -14,11 +16,11 @@ class CPU {
         this.ram = ram;
 
         this.reg = new Array(8).fill(0); // General-purpose registers R0-R7
-        
+
         // Special-purpose registers
         this.PC = 0; // Program Counter
     }
-    
+
     /**
      * Store value in memory address, useful for program loading
      */
@@ -70,7 +72,7 @@ class CPU {
         // right now.)
 
         // !!! IMPLEMENT ME
-
+        const IR = this.ram.read(this.reg.PC)
         // Debugging output
         //console.log(`${this.PC}: ${IR.toString(2)}`);
 
@@ -78,18 +80,35 @@ class CPU {
         // needs them.
 
         // !!! IMPLEMENT ME
-
+        const operandA = this.ram.read(this.reg.PC + 1);
+        const operandB = this.ram.read(this.reg.PC + 2);
         // Execute the instruction. Perform the actions for the instruction as
         // outlined in the LS-8 spec.
 
         // !!! IMPLEMENT ME
-
+        switch(IR){
+          case LDI:
+            this.stopClock();
+            break;
+          case PRN:
+            console.log(this.reg[operandA])
+            break;
+          case HLT:
+            this.stopClock();
+            break;
+          default:
+            console.error(`Error, unknown instruction at PC ${this.reg.PC} : ${IR.toString(2)}`)
+            this.stopClock();
+            return;
+        }
         // Increment the PC register to go to the next instruction. Instructions
         // can be 1, 2, or 3 bytes long. Hint: the high 2 bits of the
         // instruction byte tells you how many bytes follow the instruction byte
         // for any particular instruction.
-        
+
         // !!! IMPLEMENT ME
+        const instLen = (IR >> 6) + 1;
+        this.PC += instLen;
     }
 }
 
