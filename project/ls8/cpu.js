@@ -4,6 +4,8 @@
 const LDI = 0b10011001
 const PRN = 0b01000011
 const HLT = 0b00000001
+const MUL = 0b10101010
+const DIV = 0b10101011;
 /**
  * Class for simulating a simple Computer (CPU & memory)
  */
@@ -58,6 +60,7 @@ class CPU {
         switch (op) {
             case 'MUL':
                 // !!! IMPLEMENT ME
+                this.reg[regA] = regA * regB;
                 break;
         }
     }
@@ -93,11 +96,15 @@ class CPU {
           case PRN:
             console.log(this.reg[operandA])
             break;
+          case 'MUL':
+            this.reg[regA] = operandA * operandB;
+            break;
           case HLT:
             this.stopClock();
             break;
+
           default:
-            console.error(`Error, unknown instruction at PC ${this.reg.PC} : ${IR.toString(2)}`)
+            console.error(`Error`)
             this.stopClock();
             return;
         }
